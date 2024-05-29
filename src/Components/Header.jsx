@@ -30,8 +30,8 @@ function Header() {
         </div>
         <div className='hidden sm:flex gap-8'>
           <div><p className='cursor-pointer'>About Us</p></div>
-          <div><p className='cursor-pointer'>Login In</p></div>
-          <div><p className='cursor-pointer'>Sign In</p></div>
+          <div><p className='cursor-pointer'>Contact Us</p></div>
+          <div><p className='cursor-pointer'>Logout</p></div>
         </div>
         <div className='sm:hidden flex items-center relative'>
           <img
@@ -48,8 +48,8 @@ function Header() {
               }`}
             >
               <div className='p-2 bg-opacity-0 hover:bg-opacity-100 duration-500 hover:text-white hover:bg-slate-800'><p className='cursor-pointer'>About Us</p></div>
-              <div className='p-2 bg-opacity-0 hover:bg-opacity-100 duration-500 hover:text-white hover:bg-slate-800'><p className='cursor-pointer'>Login In</p></div>
-              <div className='p-2 bg-opacity-0 hover:bg-opacity-100 duration-500 hover:text-white hover:bg-slate-800'><p className='cursor-pointer'>Sign In</p></div>
+              <div className='p-2 bg-opacity-0 hover:bg-opacity-100 duration-500 hover:text-white hover:bg-slate-800'><p className='cursor-pointer'>Contact Us</p></div>
+              <div className='p-2 bg-opacity-0 hover:bg-opacity-100 duration-500 hover:text-white hover:bg-slate-800'><p className='cursor-pointer'>Logout</p></div>
             </div>
           )}
         </div>
