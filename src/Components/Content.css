@@ -1,0 +1,16 @@
+
+@media (max-width: 640px) {
+    .keyboard-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for Firefox */
+    .keyboard-container {
+        scrollbar-width: none;
+    }
+
+    /* Hide scrollbar for IE and Edge */
+    .keyboard-container {
+        -ms-overflow-style: none;
+    }
+}

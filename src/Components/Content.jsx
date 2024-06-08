@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import paragraphs from '../Paragraph.json';
 import Error from './Error';
+import './Content.css';
+import Message from './Message';
 
 function Content() {
     const rows = [
@@ -22,16 +24,20 @@ function Content() {
     const [error, setError] = useState('');
     const [timer, setTimer] = useState(15);
     const [isTyping, setIsTyping] = useState(false);
+    const [typingTimeout, setTypingTimeout] = useState(null);
+    const [isPaused, setIsPaused] = useState(false);
+    const [message, setMessage] = useState('');
 
     const keysRef = useRef([]);
 
     const handleKeyPress = (event) => {
         const { key } = event;
-        console.log(key, 'this is the key');
 
         const isAlphabetic = /^[a-zA-Z]$/.test(key);
         if (!isTyping && isAlphabetic) {
             setIsTyping(true);
+            setIsPaused(false);
+            setMessage('');  // Reset message when typing starts
         }
 
         if (!isAlphabetic && key !== 'Backspace' && key !== ' ') {
@@ -63,6 +69,16 @@ function Content() {
         if (keyElement) {
             keyElement.current.focus();
         }
+
+        // Reset typing timeout
+        if (typingTimeout) {
+            clearTimeout(typingTimeout);
+        }
+        setTypingTimeout(setTimeout(() => {
+            setIsPaused(true);
+            setIsTyping(false);
+            setMessage('Concentrate!');
+        }, 3000));
     };
 
     useEffect(() => {
@@ -79,12 +95,14 @@ function Content() {
             setUserInput('');
             setTimer(15); 
             setIsTyping(false); 
+            setIsPaused(false); // Reset pause state
+            setMessage(''); // Clear message when new paragraph starts
         }
     }, [userInput, currentParagraph]);
 
     useEffect(() => {
         let countdown;
-        if (isTyping) {
+        if (isTyping && !isPaused) {
             countdown = setInterval(() => {
                 setTimer((prevTimer) => {
                     if (prevTimer === 1) {
@@ -92,6 +110,8 @@ function Content() {
                         setCurrentParagraph(getRandomParagraph());
                         setUserInput('');
                         setIsTyping(false); 
+                        setIsPaused(false); // Reset pause state
+                        setMessage(''); // Clear message when time runs out
                         return 15;
                     }
                     return prevTimer - 1;
@@ -100,7 +120,7 @@ function Content() {
         }
 
         return () => clearInterval(countdown);
-    }, [isTyping, currentParagraph]);
+    }, [isTyping, isPaused]);
 
     const getLetterClass = (letter, index) => {
         if (index < userInput.length) {
@@ -110,10 +130,11 @@ function Content() {
     };
 
     return (
-        <div className='flex justify-center items-center gap-11 flex-col'>
+        <div className={`flex justify-center  items-center gap-11 flex-col `}>
             {error && <Error error={error} />}
-            <div className='keyboard-container w-3/4 h-[5rem] bg-opacity-50 p-8 bg-gray-900 rounded-xl flex items-center justify-center shadow-md'>
-                <p className="text-white text-xl text-center font-bold">
+            {message && <Message message={message} />}
+            <div className='keyboard-container w-11/12 sm:w-3/4 h-[5rem] bg-opacity-50 sm:overflow-hidden overflow-y-scroll pt-5 p-0 sm:p-8 bg-gray-900 rounded-xl flex items-center justify-center shadow-md'>
+                <p className="text-white text-center text-sm sm:text-base md:text-base lg:text-xl font-bold">
                     {currentParagraph.split('').map((letter, index) => (
                         <span key={index} className={getLetterClass(letter, index)}>
                             {letter}
@@ -121,13 +142,13 @@ function Content() {
                     ))}
                 </p>
             </div>
-            <div className='w-3/4 flex justify-end'>
-                <p className='text-teal-500 font-bold text-4xl absolute mt-44'>{timer}</p>
+            <div className='w-3/4 flex justify-center md:justify-end'>
+                <p className='sm:text-blue-950 md:text-red-500 lg:text-orange-500 font-bold text-4xl absolute sm:-mt-4 lg:mt-44'>{timer}</p>
             </div>
-            <div className='keyboard-keys-container w-[800px] flex flex-col bg-gray-900 rounded-xl shadow-md p-4'>
+            <div className='keyboard-keys-container w-full sm:w-[600px] md:w-[700px] flex flex-col sm:bg-gray-900 sm:rounded-xl sm:shadow-md p-4'>
                 {rows.map((row, rowIndex) => (
                     <div key={rowIndex} className="flex justify-center w-full">
-                        {row.map((key, keyIndex) => {
+                        {row.map((key, keyIndex) => {   
                             const keyRef = useRef(null);
                             keysRef.current.push(keyRef);
 
@@ -135,7 +156,7 @@ function Content() {
                                 <div
                                     ref={keyRef}
                                     className={`key bg-gray-800 text-white font-bold flex items-center justify-center rounded-md m-1 focus:scale-125 focus:bg-gray-600 outline-none transition-transform duration-200 ${
-                                        key === ' ' ? 'w-3/4 h-16' : 'w-16 h-16'
+                                        key === ' ' ? 'w-3/4 h-12 sm:h-16' : 'w-16 sm:h-16'
                                     }`}
                                     key={keyIndex}
                                     tabIndex={0}

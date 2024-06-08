@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import 'animate.css';
 import './Error.css'; 
 
-function Error({ error }) {
+function Error({ error, message }) {
     const [showError, setShowError] = useState(true);
     const [visible, setVisible] = useState(false);
 
@@ -13,7 +13,7 @@ function Error({ error }) {
             setTimeout(() => setShowError(false), 300); // Wait for the fade-out transition to complete
         }, 3000);
 
-        return () => clearTimeout(timer);
+        return () => clearTimeout(timer);   
     }, [error]);
 
     if (!showError) {

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import dotIcon from '../assets/dotIcon.png';
+import { Link } from 'react-router-dom';
 
 function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -29,8 +30,8 @@ function Header() {
           <h1 className='text-3xl'>SpeedTyping</h1>
         </div>
         <div className='hidden sm:flex gap-8'>
-          <div><p className='cursor-pointer'>About Us</p></div>
-          <div><p className='cursor-pointer'>Contact Us</p></div>
+          <div><Link to={'/about'}><p className='cursor-pointer'>About Us</p></Link></div>
+          <div><Link to={'/contact'}><p className='cursor-pointer'>Contact Us</p></Link></div>
           <div><p className='cursor-pointer'>Logout</p></div>
         </div>
         <div className='sm:hidden flex items-center relative'>
@@ -47,9 +48,9 @@ function Header() {
                 isDropdownOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
               }`}
             >
-              <div className='p-2 bg-opacity-0 hover:bg-opacity-100 duration-500 hover:text-white hover:bg-slate-800'><p className='cursor-pointer'>About Us</p></div>
-              <div className='p-2 bg-opacity-0 hover:bg-opacity-100 duration-500 hover:text-white hover:bg-slate-800'><p className='cursor-pointer'>Contact Us</p></div>
-              <div className='p-2 bg-opacity-0 hover:bg-opacity-100 duration-500 hover:text-white hover:bg-slate-800'><p className='cursor-pointer'>Logout</p></div>
+              <div className='p-2 bg-opacity-0 hover:bg-opacity-100 duration-500 hover:text-white hover:bg-slate-800'><Link to={'/about'}><p className='cursor-pointer'>About Us</p></Link></div>
+              <div className='p-2 bg-opacity-0 hover:bg-opacity-100 duration-500 hover:text-white hover:bg-slate-800'><Link to={'/contact'} ><p className='cursor-pointer'>Contact Us</p></Link></div>
+              <div className='p-2 bg-opacity-0 hover:bg-opacity-100 duration-500 hover:text-white hover:bg-slate-800'><Link to={'/logout'}><p className='cursor-pointer'>Logout</p></Link></div>
             </div>
           )}
         </div>
