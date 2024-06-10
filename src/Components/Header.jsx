@@ -7,6 +7,7 @@ import { MyContext } from '../Context/Context';
 function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showBackButton, setShowBackButton] = useState(false);
+  const [showLogout, setShowLogout] = useState(false);
   const { isTyping, setIsTyping } = useContext(MyContext);
   const [blurHeader, setBlurHeader] = useState(false);
   const dropdownRef = useRef(null);
@@ -24,6 +25,15 @@ function Header() {
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
+    const handleLogout = () =>{
+      const token = localStorage.getItem('token');
+      if(token){
+        setShowLogout(true);
+      }else{
+        setShowLogout(false);
+      }
+    }
+    handleLogout();
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -57,6 +67,7 @@ function Header() {
     }
   }, [isTyping]);
 
+
   return (
     <>
       <div className={`relative flex justify-between p-6 sm:p-8 duration-500 ${blurHeader ? 'opacity-0' : 'opacity-100'}`}>
@@ -67,7 +78,7 @@ function Header() {
         <div className='hidden sm:flex gap-8'>
           <div><Link to={'/about'}><p className='cursor-pointer'>About Us</p></Link></div>
           <div><Link to={'/contact'}><p className='cursor-pointer'>Contact Us</p></Link></div>
-          <div><p className='cursor-pointer'>Logout</p></div>
+          {showLogout ? <div><p className='cursor-pointer'>Logout</p></div> : null   }
         </div>
         <div className='sm:hidden flex items-center relative'>
           <img
@@ -85,7 +96,7 @@ function Header() {
             >
               <div className='p-2 bg-opacity-0 hover:bg-opacity-100 duration-500 hover:text-white hover:bg-slate-800'><Link to={'/about'}><p className='cursor-pointer'>About Us</p></Link></div>
               <div className='p-2 bg-opacity-0 hover:bg-opacity-100 duration-500 hover:text-white hover:bg-slate-800'><Link to={'/contact'}><p className='cursor-pointer'>Contact Us</p></Link></div>
-              <div className='p-2 bg-opacity-0 hover:bg-opacity-100 duration-500 hover:text-white hover:bg-slate-800'><Link to={'/logout'}><p className='cursor-pointer'>Logout</p></Link></div>
+              {showLogout ? <div className='p-2 bg-opacity-0 hover:bg-opacity-100 duration-500 hover:text-white hover:bg-slate-800'><Link to={'/logout'}><p className='cursor-pointer'>Logout</p></Link></div>: null}
             </div>
           )}
         </div>

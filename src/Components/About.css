@@ -8,10 +8,8 @@
     height: 100%;
     width: calc( 50% + 50px);
     box-sizing: border-box;
-    border-left: 100px solid #191818;
+    border-left: 100px solid #111010;
     border-bottom:450px solid transparent;
 }
-.TypingVideo {
-    transform: translateX(-17.7%);
-}
+
 
