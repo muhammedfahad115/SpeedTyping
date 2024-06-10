@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import paragraphs from '../Paragraph.json';
 import Error from './Error';
 import './Content.css';
 import Message from './Message';
-
+import { MyContext } from '../Context/Context';
 function Content() {
     const rows = [
         ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
@@ -23,7 +23,7 @@ function Content() {
     const [userInput, setUserInput] = useState('');
     const [error, setError] = useState('');
     const [timer, setTimer] = useState(15);
-    const [isTyping, setIsTyping] = useState(false);
+    const {isTyping, setIsTyping} = useContext(MyContext);
     const [typingTimeout, setTypingTimeout] = useState(null);
     const [isPaused, setIsPaused] = useState(false);
     const [message, setMessage] = useState('');

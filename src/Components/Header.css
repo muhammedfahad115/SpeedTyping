@@ -1,0 +1,16 @@
+    .dropdown {
+        animation: drop 3.5s ease-in-out infinite;
+    }
+
+    @keyframes drop {
+        0% {
+        transform: translateX(-100%);
+        }
+        50% {
+        transform: translateX(0);
+        }
+        100% {
+        transform: translateX(-100%);
+        display: ;
+        }
+    }
