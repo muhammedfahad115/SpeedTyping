@@ -7,8 +7,8 @@ import Context from '../Context/Context'
 
 function UserRoutes() {
   return (
+    <>
     <Context>
-      <>
         <Routes>
           <Route path='/' element={<LandingPage />}>
             <Route path='/' element={<Content />}></Route>
@@ -16,8 +16,8 @@ function UserRoutes() {
           </Route>
           <Route path='/login' element={<Login />}></Route>
         </Routes>
-      </>
     </Context>
+      </>
   )
 }
 

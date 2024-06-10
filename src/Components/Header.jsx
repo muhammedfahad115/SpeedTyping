@@ -7,7 +7,7 @@ import { MyContext } from '../Context/Context';
 function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showBackButton, setShowBackButton] = useState(false);
-  const {isTyping, setIsTyping} = useContext(MyContext);
+  const { isTyping, setIsTyping } = useContext(MyContext);
   const [blurHeader, setBlurHeader] = useState(false);
   const dropdownRef = useRef(null);
   const location = useLocation();
@@ -32,22 +32,37 @@ function Header() {
   useEffect(() => {
     setShowBackButton(location.pathname !== '/');
   }, [location]);
-  
+
+  useEffect(() => {
+    const handleMouseMove = () => {
+      setBlurHeader(false);
+    };
+
+    if (isTyping) {
+      setBlurHeader(true);
+      document.addEventListener('mousemove', handleMouseMove);
+    } else {
+      setBlurHeader(false);
+      document.removeEventListener('mousemove', handleMouseMove);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [isTyping]);
+
   useEffect(() => {
     if (isTyping) {
       setBlurHeader(true);
-    } else {
-      setBlurHeader(false);
     }
   }, [isTyping]);
 
-
   return (
     <>
-      <div className={`relative flex justify-between p-6 sm:p-8 ${blurHeader ? 'blur' : ''}`}>
-        <div className='flex '>
-        <h1 className='text-3xl relative z-10 bg-white h-12  '>SpeedTyping</h1>
-          {showBackButton && <Link to={'/'}><div className='flex  mt-1  h-10 items-center p-3 bg-gray-600 dropdown  ' ><p className='text-white font-bold z-0 text-sm'>Click to home</p></div></Link>}
+      <div className={`relative flex justify-between p-6 sm:p-8 duration-500 ${blurHeader ? 'opacity-0' : 'opacity-100'}`}>
+        <div className='flex'>
+          <h1 className='text-3xl relative z-10 bg-white h-12'>SpeedTyping</h1>
+          {showBackButton && <Link to={'/'}><div className='flex mt-1 h-10 items-center p-3 bg-gray-600 dropdown'><p className='text-white font-bold z-0 text-sm'>Click to home</p></div></Link>}
         </div>
         <div className='hidden sm:flex gap-8'>
           <div><Link to={'/about'}><p className='cursor-pointer'>About Us</p></Link></div>
@@ -69,7 +84,7 @@ function Header() {
               }`}
             >
               <div className='p-2 bg-opacity-0 hover:bg-opacity-100 duration-500 hover:text-white hover:bg-slate-800'><Link to={'/about'}><p className='cursor-pointer'>About Us</p></Link></div>
-              <div className='p-2 bg-opacity-0 hover:bg-opacity-100 duration-500 hover:text-white hover:bg-slate-800'><Link to={'/contact'} ><p className='cursor-pointer'>Contact Us</p></Link></div>
+              <div className='p-2 bg-opacity-0 hover:bg-opacity-100 duration-500 hover:text-white hover:bg-slate-800'><Link to={'/contact'}><p className='cursor-pointer'>Contact Us</p></Link></div>
               <div className='p-2 bg-opacity-0 hover:bg-opacity-100 duration-500 hover:text-white hover:bg-slate-800'><Link to={'/logout'}><p className='cursor-pointer'>Logout</p></Link></div>
             </div>
           )}
