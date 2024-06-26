@@ -70,10 +70,10 @@ function Header() {
 
   return (
     <>
-      <div className={`relative flex justify-between p-6 sm:p-8 duration-500 ${blurHeader ? 'opacity-0' : 'opacity-100'}`}>
+      <div className={`relative flex  justify-between p-6 sm:p-8 duration-500 ${blurHeader ? 'opacity-0' : 'opacity-100'}`}>
         <div className='flex'>
           <h1 className='text-3xl relative z-10 bg-white h-12'>SpeedTyping</h1>
-          {showBackButton && <Link to={'/'}><div className='flex mt-1 h-10 items-center p-3 bg-gray-600 dropdown'><p className='text-white font-bold z-0 text-sm'>Click to home</p></div></Link>}
+          {showBackButton && <Link to={'/'}><div className='flex mt-1 h-10 items-center p-3 bg-gray-600 dropdown'><p className='text-white font-bold z-0 sm:text-sm text-xs'>Click to home</p></div></Link>}
         </div>
         <div className='hidden sm:flex gap-8'>
           <div><Link to={'/about'}><p className='cursor-pointer'>About Us</p></Link></div>

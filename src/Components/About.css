@@ -1,15 +1,20 @@
-
 .paragraph {
     height: 100%;
-    width: calc( 50% - 50px);
+    width: calc(50% - 50px);
     box-sizing: border-box;
 }
+
 .background {
     height: 100%;
-    width: calc( 50% + 50px);
+    width: calc(50% + 50px);
     box-sizing: border-box;
     border-left: 100px solid #111010;
-    border-bottom:450px solid transparent;
+    border-bottom: 450px solid transparent;
 }
 
-
+/* Media query to remove border-left on small screens */
+@media (max-width: 640px) { /* Tailwind's sm breakpoint is 640px */
+    .background {
+        border-left: none;
+    }
+}

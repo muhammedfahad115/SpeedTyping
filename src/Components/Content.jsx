@@ -4,12 +4,13 @@ import Error from './Error';
 import './Content.css';
 import Message from './Message';
 import { MyContext } from '../Context/Context';
+
 function Content() {
     const rows = [
         ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
         ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
         ['z', 'x', 'c', 'v', 'b', 'n', 'm'],
-        [' ']
+        ['space']
     ];
 
     const { array } = paragraphs;
@@ -23,17 +24,18 @@ function Content() {
     const [userInput, setUserInput] = useState('');
     const [error, setError] = useState('');
     const [timer, setTimer] = useState(15);
-    const {isTyping, setIsTyping} = useContext(MyContext);
+    const { isTyping, setIsTyping } = useContext(MyContext);
     const [typingTimeout, setTypingTimeout] = useState(null);
     const [isPaused, setIsPaused] = useState(false);
     const [message, setMessage] = useState('');
+    const [cursorIndex, setCursorIndex] = useState(0); // Track current cursor position
 
     const keysRef = useRef([]);
 
     const handleKeyPress = (event) => {
         const { key } = event;
-
         const isAlphabetic = /^[a-zA-Z]$/.test(key);
+        
         if (!isTyping && isAlphabetic) {
             setIsTyping(true);
             setIsPaused(false);
@@ -44,27 +46,35 @@ function Content() {
             return;
         }
 
-        if (key === 'Backspace') {
-            setError('Backspace is not allowed');
-            return;
-        } else {
-            setError('');
-        }
-
         let inputKey = '';
         if (key === ' ') {
             inputKey = ' ';
+        } else if (key === 'Backspace') {
+            setUserInput((prevInput) => {
+                const newInput = prevInput.slice(0, -1);
+                setCursorIndex(newInput.length); // Update cursor position
+                return newInput;
+            });
+            return;
         } else {
             inputKey = key.trim() === '' ? ' ' : key.toLowerCase();
         }
 
         if (currentParagraph[userInput.length] === inputKey) {
-            setUserInput((prevInput) => prevInput + inputKey);
+            setUserInput((prevInput) => {
+                const newInput = prevInput + inputKey;
+                setCursorIndex(newInput.length); // Update cursor position
+                return newInput;
+            });
         } else {
-            setUserInput((prevInput) => prevInput + '!');
+            setUserInput((prevInput) => {
+                const newInput = prevInput + '!';
+                setCursorIndex(newInput.length); // Update cursor position
+                return newInput;
+            });
         }
 
-        const keyElement = keysRef.current.find((keyRef) => keyRef.current.innerText.toLowerCase() === inputKey.toLowerCase());
+        const keyElement = keysRef.current.find((keyRef) => keyRef.current.innerText.toLowerCase() === inputKey.toLowerCase() || (key === ' ' && keyRef.current.innerText === 'Space'));
 
         if (keyElement) {
             keyElement.current.focus();
@@ -97,6 +107,7 @@ function Content() {
             setIsTyping(false); 
             setIsPaused(false); // Reset pause state
             setMessage(''); // Clear message when new paragraph starts
+            setCursorIndex(0); // Reset cursor position
         }
     }, [userInput, currentParagraph]);
 
@@ -112,6 +123,7 @@ function Content() {
                         setIsTyping(false); 
                         setIsPaused(false); // Reset pause state
                         setMessage(''); // Clear message when time runs out
+                        setCursorIndex(0); // Reset cursor position
                         return 15;
                     }
                     return prevTimer - 1;
@@ -130,13 +142,13 @@ function Content() {
     };
 
     return (
-        <div className={`flex justify-center  items-center gap-11 flex-col `}>
+        <div className={`flex justify-center items-center gap-11 flex-col`}>
             {error && <Error error={error} />}
             {message && <Message message={message} />}
-            <div className='keyboard-container w-11/12 sm:w-3/4 h-[5rem] bg-opacity-50 sm:overflow-hidden overflow-y-scroll pt-5 p-0 sm:p-8 bg-gray-900 rounded-xl flex items-center justify-center shadow-md'>
+            <div className='keyboard-container w-11/12 sm:w-3/4 h-[5rem] bg-opacity-50 sm:overflow-hidden overflow-y-scroll pt-10 p-0 sm:p-8 bg-gray-900 rounded-xl flex items-center justify-center shadow-md'>
                 <p className="text-white text-center text-sm sm:text-base md:text-base lg:text-xl font-bold">
                     {currentParagraph.split('').map((letter, index) => (
-                        <span key={index} className={getLetterClass(letter, index)}>
+                        <span key={index} className={index === cursorIndex ? 'cursor-indicator ' : getLetterClass(letter, index)}>
                             {letter}
                         </span>
                     ))}
@@ -155,13 +167,13 @@ function Content() {
                             return (
                                 <div
                                     ref={keyRef}
-                                    className={`key bg-gray-800 text-white font-bold flex items-center justify-center rounded-md m-1 focus:scale-125 focus:bg-gray-600 outline-none transition-transform duration-200 ${
-                                        key === ' ' ? 'w-3/4 h-12 sm:h-16' : 'w-16 sm:h-16'
+                                    className={`key bg-gray-800 text-white font-bold flex items-center justify-center rounded-md m-1 focus:scale-110 focus:bg-gray-600 outline-none transition-transform duration-200 ${
+                                        key === 'space' ? 'w-3/4 h-12 sm:h-16' : 'w-16 sm:h-16'
                                     }`}
                                     key={keyIndex}
                                     tabIndex={0}
                                 >
-                                    {key === ' ' ? <>&nbsp;</> : key}
+                                    {key === 'space' ? 'Space' : key}
                                 </div>
                             );
                         })}
