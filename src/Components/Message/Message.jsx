@@ -16,7 +16,7 @@ function Message({ message }) {
   return (
     <>
       <div
-        className={`fixed top-0 left-1/2 transform -translate-x-1/2 mt-4 flex items-center justify-center z-50 ${
+        className={`fixed top-0  transform -translate-x-1/2 mt-4 flex items-center justify-center z-50 ${
           visible ? 'slide-down' : 'hidden'
         }`}
       >

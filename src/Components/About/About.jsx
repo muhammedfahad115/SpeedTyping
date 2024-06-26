@@ -3,7 +3,7 @@ import backgroundVideo from '../../assets/keyboardyellow2.png'
 function About() {
     return (
         <>
-            <div className='w-full justify-center sm:flex '>
+            <div className='w-3/4 justify-center sm:flex '>
                 <section className='w-3/4 h-[450px] sm:flex justify-center '>
                     <div className=' sm:paragraph w-screen bg-[#111010] p-10  '>
                         <h1 className=' text-4xl text-yellow-400 font-bold'> Introducing SpeedTyping: Enhance Your Typing Skills</h1>
