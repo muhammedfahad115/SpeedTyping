@@ -1,5 +1,5 @@
 import './About.css'
-import backgroundVideo from '../assets/keyboardyellow2.png'
+import backgroundVideo from '../../assets/keyboardyellow2.png'
 function About() {
     return (
         <>

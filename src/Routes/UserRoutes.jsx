@@ -1,8 +1,8 @@
 import { Route, Routes } from 'react-router-dom'
 import Login from '../Components/Login'
 import LandingPage from '../Pages/LandingPage'
-import Content from '../Components/Content'
-import About from '../Components/About'
+import Content from '../Components/Content/Content'
+import About from '../Components/About/About'
 import Context from '../Context/Context'
 
 function UserRoutes() {

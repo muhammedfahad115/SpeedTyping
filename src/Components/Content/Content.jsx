@@ -1,9 +1,9 @@
 import { useContext, useEffect, useRef, useState } from 'react';
-import paragraphs from '../Paragraph.json';
-import Error from './Error';
+import paragraphs from '../../Paragraph.json';
+import Error from '../Error/Error';
 import './Content.css';
-import Message from './Message';
-import { MyContext } from '../Context/Context';
+import Message from '../Message/Message';
+import { MyContext } from '../../Context/Context';
 
 function Content() {
     const rows = [

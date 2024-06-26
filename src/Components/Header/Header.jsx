@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef, useContext } from 'react';
-import dotIcon from '../assets/dotIcon.png';
+import dotIcon from '../../assets/dotIcon.png';
 import { Link, useLocation } from 'react-router-dom';
 import './Header.css';
-import { MyContext } from '../Context/Context';
+import { MyContext } from '../../Context/Context';
 
 function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

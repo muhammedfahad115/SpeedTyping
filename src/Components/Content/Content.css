@@ -1,0 +1,37 @@
+
+@media (max-width: 640px) {
+    .keyboard-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for Firefox */
+    .keyboard-container {
+        scrollbar-width: none;
+    }
+
+    /* Hide scrollbar for IE and Edge */
+    .keyboard-container {
+        -ms-overflow-style: none;
+    }
+}
+.cursor-indicator {
+    border-left: 2px solid #fff; /* Example style for cursor indicator */
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        border-left-color: #1b263d; /* Initial color */
+        transform: scale(1);
+    }
+    50% {
+        border-left-color: white; /* Color remains same */
+        transform: scale(1.1); /* Scale up slightly */
+    }
+    100% {
+        border-left-color: #1b263d; /* Back to original color */
+        transform: scale(1);
+    }
+}
+
+
