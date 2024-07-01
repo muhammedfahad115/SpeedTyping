@@ -15,14 +15,14 @@ function Content() {
 
     const { array } = paragraphs;
 
-    // Function to get random paragraph
-        const getRandomParagraph = () => {
+    const getRandomParagraph = () => {
         const randomIndex = Math.floor(Math.random() * array.length);
         return array[randomIndex];
     };
 
     const [currentParagraph, setCurrentParagraph] = useState(getRandomParagraph());
     const [userInput, setUserInput] = useState('');
+    const [currentWord, setCurrentWord] = useState('');
     const [error, setError] = useState('');
     const [timer, setTimer] = useState(15);
     const { isTyping, setIsTyping } = useContext(MyContext);
@@ -33,13 +33,11 @@ function Content() {
 
     const keysRef = useRef([]);
  
-    // Function to handle key press
     const handleKeyPress = (event) => {
         const { key } = event;
         const isAlphabetic = /^[a-zA-Z]$/.test(key);
-        
+
         if (!isTyping && isAlphabetic) {
-            setIsTyping(true);
             setIsPaused(false);
             setMessage('');  // Reset message when typing starts
         }
@@ -51,52 +49,60 @@ function Content() {
         let inputKey = '';
         if (key === ' ') {
             inputKey = ' ';
+            if (currentWord.length > 0) {
+                setUserInput((prevInput) => {
+                    const newInput = prevInput + inputKey;
+                    setCursorIndex(newInput.length);
+                    return newInput;
+                });
+                setCurrentWord('');
+            }
+            return;
         } else if (key === 'Backspace') {
-            setUserInput((prevInput) => {
-                const newInput = prevInput.slice(0, -1);
-                setCursorIndex(newInput.length); // Update cursor position
-                return newInput;
-            });
+            if (currentWord.length > 0) {
+                setUserInput((prevInput) => {
+                    const newInput = prevInput.slice(0, -1);
+                    setCursorIndex(newInput.length); // Update cursor position
+                    return newInput;
+                });
+                setCurrentWord((prevWord) => prevWord.slice(0, -1));
+            }
             return;
         } else {
             inputKey = key.trim() === '' ? ' ' : key.toLowerCase();
         }
 
-        // Check if user input matches current paragraph
         if (currentParagraph[userInput.length] === inputKey) {
             setUserInput((prevInput) => {
                 const newInput = prevInput + inputKey;
                 setCursorIndex(newInput.length); // Update cursor position
                 return newInput;
             });
+            setCurrentWord((prevWord) => prevWord + inputKey);
         } else {
             setUserInput((prevInput) => {
                 const newInput = prevInput + '!';
                 setCursorIndex(newInput.length); // Update cursor position
                 return newInput;
             });
+            setCurrentWord((prevWord) => prevWord + '!');
         }
 
-        // Focus on next key
         const keyElement = keysRef.current.find((keyRef) => keyRef.current.innerText.toLowerCase() === inputKey.toLowerCase() || (key === ' ' && keyRef.current.innerText === 'Space'));
 
         if (keyElement) {
             keyElement.current.focus();
         }
 
-        // Reset typing timeout
         if (typingTimeout) {
             clearTimeout(typingTimeout);
         }
         setTypingTimeout(setTimeout(() => {
             setIsPaused(true); // Set pause state
-            setIsTyping(false); // Reset typing state
-            setMessage('Concentrate!'); // Display message
+            // setMessage('Concentrate!'); // Display message
         }, 3000));
     };
 
-
-    // useEffect to handle key press
     useEffect(() => {
         window.addEventListener('keydown', handleKeyPress);
 
@@ -105,22 +111,17 @@ function Content() {
         };
     }, [userInput, isTyping]);
 
-
-    // useEffect to check if user input matches current paragraph
     useEffect(() => {
         if (userInput.length === currentParagraph.length) {
             setCurrentParagraph(getRandomParagraph());
             setUserInput('');
             setTimer(15); 
-            setIsTyping(false); 
             setIsPaused(false); // Reset pause state
             setMessage(''); // Clear message when new paragraph starts
             setCursorIndex(0); // Reset cursor position
         }
     }, [userInput, currentParagraph]);
 
-
-    // useEffect to set timer
     useEffect(() => {
         let countdown;
         if (isTyping && !isPaused) {
@@ -130,7 +131,6 @@ function Content() {
                         clearInterval(countdown);
                         setCurrentParagraph(getRandomParagraph());
                         setUserInput('');
-                        setIsTyping(false); 
                         setIsPaused(false); // Reset pause state
                         setMessage(''); // Clear message when time runs out
                         setCursorIndex(0); // Reset cursor position
@@ -144,7 +144,12 @@ function Content() {
         return () => clearInterval(countdown);
     }, [isTyping, isPaused]);
 
-    // Function to get letter class
+    useEffect(() => {
+        if (!isTyping && userInput) {
+            setIsTyping(true);
+        }
+    }, [isTyping, userInput, setIsTyping]);
+
     const getLetterClass = (letter, index) => {
         if (index < userInput.length) {
             return userInput[index] === letter ? 'text-green-500' : 'text-red-500';
@@ -156,7 +161,7 @@ function Content() {
         <div className={`flex justify-center items-center gap-11 flex-col`}>
             {error && <Error error={error} />}
             {message && <Message message={message} />}
-            <div className='keyboard-container w-11/12 sm:w-3/4 h-[5rem] bg-opacity-50 sm:overflow-hidden overflow-y-scroll pt-10 p-0 sm:p-8 bg-gray-900 rounded-xl flex items-center justify-center shadow-md'>
+            <div className='keyboard-container w-11/12 sm:w-3/4 h-[5rem] bg-opacity-50 sm:overflow-hidden overflow-y-scroll p-0 sm:p-8 bg-gray-900 rounded-xl flex  items-center justify-center shadow-md'>
                 <p className="text-white text-center text-sm sm:text-base md:text-base lg:text-xl font-bold">
                     {currentParagraph.split('').map((letter, index) => (
                         <span key={index} className={index === cursorIndex ? 'cursor-indicator ' : getLetterClass(letter, index)}>
@@ -168,7 +173,7 @@ function Content() {
             <div className='w-3/4 flex justify-center   md:justify-end'>
                 <p className=' bg-gray-500 rounded-full p-2 text-center shadow-lg shadow-slate-400 text-white  w-12 h-12 text-2xl sm:w-14 sm:h-14 font-bold sm:text-4xl absolute -mt-4 lg:mt-44'>{timer}</p>
             </div>
-            <div className='keyboard-keys-container w-full sm:w-[600px] md:w-[700px] flex flex-col sm:bg-gray-900 sm:rounded-xl sm:shadow-md p-4'>
+            <div className='keyboard-keys-container w-full sm:w-[600px] md:w-[700px] flex flex-col sm:-mt-8 sm:bg-gray-900 sm:rounded-xl sm:shadow-md p-4'>
                 {rows.map((row, rowIndex) => (
                     <div key={rowIndex} className="flex justify-center w-full">
                         {row.map((key, keyIndex) => {   
